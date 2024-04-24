@@ -89,7 +89,7 @@ def isp_ed_enc(secret_img: np.array,
     return share0, share1
 
 
-def isp_ed_dec(share0, share1):
+def isp_ed_dec(share0: np.array, share1: np.array):
     """
     Dencrypt the secret image from two share images by Image Size-Preserving Visual Cryptography by Error Diﬀusion.
     Inputs:

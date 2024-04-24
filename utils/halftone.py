@@ -1,7 +1,16 @@
 import numpy as np
 
 
-def errorDiffusionFloydSteinberg(img, threshold=128):
+def errorDiffusionFloydSteinberg(img: np.array, threshold: int = 128):
+    """
+    Apply the Flayd-Steinberg method on the input images.
+
+    Inputs:
+        img: The input image.
+
+    Returns:
+        output: The halftone result.
+    """
     h, w = img.shape
     error_img = np.zeros((h + 1, w + 2), dtype=np.float32)
     error_img[:h, 1:w + 1] = img.astype(np.float32)
