@@ -10,5 +10,6 @@
 ## File structure
 ```
 .
-└── README.md
+├── README.md
+└── requirements.txt
 ```
