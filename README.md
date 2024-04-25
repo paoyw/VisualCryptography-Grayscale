@@ -22,11 +22,23 @@
 ## File structure
 ```
 .
+├── datas
+│   ├── README.md
+│   ├── aerials
+│   │   ├── 2.1.01.tiff
+│   │   └── ... 
+│   ├── misc
+│   │   ├── 4.1.01.tiff
+│   │   └── ...
+│   └── textures
+│       ├── 1.1.01.tiff
+│       └── ...
 ├── ed.py
 ├── evc.py
 ├── isp_ed.py
 ├── README.md
 ├── requirements.txt
 └── utils
-    └── halftone.py
+    ├── halftone.py
+    └── __init__.py
 ```
