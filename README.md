@@ -4,7 +4,11 @@
 ### [Extended Visual Cryptography for Natural Images](https://otik.uk.zcu.cz/handle/11025/5993)
 - Encrypt
     ```bash
-    python evc.py --share0 SHARE_IMAGE_0 --share1 SHARE_IMAGE_1 --secret SECRET_IMAGE --share0 SHARE_IMAGE_0 --share1 SHARE_IMAGE_1
+    python evc.py --carry0 CARRY_IMAGE_0 --carry1 CARRY_IMAGE_1 --secret SECRET_IMAGE --share0 SHARE_IMAGE_0 --share1 SHARE_IMAGE_1
+    ```
+- Decrypt
+    ```bash
+    python evc.py --share0 SHARE_IMAGE_2 --share1 SHARE_IMAGE_1
     ```
 
 ### [Halftone Visual Cryptography Embedding a Natural Grayscale Image Based on Error Diffusion Technique](https://ieeexplore.ieee.org/abstract/document/4285100/)
