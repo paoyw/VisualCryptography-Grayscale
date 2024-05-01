@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 
-def isp_ed_enc(secret_img: np.array,
+def enc(secret_img: np.array,
                alpha: int = 1, gamma: float = 0.5,
                threshold: float = 0.5):
     """
@@ -89,7 +89,7 @@ def isp_ed_enc(secret_img: np.array,
     return share0, share1
 
 
-def isp_ed_dec(share0: np.array, share1: np.array):
+def dec(share0: np.array, share1: np.array):
     """
     Dencrypt the secret image from two share images by Image Size-Preserving Visual Cryptography by Error Diﬀusion.
     Inputs:
@@ -105,7 +105,7 @@ def isp_ed_dec(share0: np.array, share1: np.array):
 def main(args):
     if not args.dec_only:
         secret_img = cv2.imread(args.secret, cv2.IMREAD_GRAYSCALE)
-        share0, share1 = isp_ed_enc(secret_img=secret_img,
+        share0, share1 = enc(secret_img=secret_img,
                                     alpha=args.alpha,
                                     gamma=args.gamma,
                                     threshold=args.threshold)
@@ -118,7 +118,7 @@ def main(args):
         share1 = cv2.imread(args.share1, cv2.IMREAD_GRAYSCALE)
 
     if args.dec:
-        dec = isp_ed_dec(share0, share1)
+        dec = dec(share0, share1)
         cv2.imwrite(args.dec, dec)
 
 
