@@ -17,7 +17,7 @@ def enc(secret_img: np.array,
         threshold: The threshold for error diffusion for share images.
 
     Returns:
-        share_imgs: Two share images.
+        share0, share1: Two share images.
     """
     h, w = secret_img.shape
     secret_img = secret_img.astype(np.float32)
@@ -91,7 +91,7 @@ def enc(secret_img: np.array,
 
 def dec(share0: np.array, share1: np.array):
     """
-    Dencrypt the secret image from two share images by Image Size-Preserving Visual Cryptography by Error Diﬀusion.
+    Decrypt the secret image from two share images by Image Size-Preserving Visual Cryptography by Error Diﬀusion.
     Inputs:
         share0: The share images 1.
         share1: The share images 2.
