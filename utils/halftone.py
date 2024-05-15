@@ -1,12 +1,14 @@
 import numpy as np
 
 
-def errorDiffusionFloydSteinberg(img: np.array, threshold: int = 128):
+def errorDiffusionFloydSteinberg(img: np.array, threshold=128, value=255):
     """
     Apply the Flayd-Steinberg method on the input images.
 
     Inputs:
         img: The input image.
+        threshold: The threshold for value assignment.
+        value: The value assigned to high value.
 
     Returns:
         output: The halftone result.
@@ -22,7 +24,7 @@ def errorDiffusionFloydSteinberg(img: np.array, threshold: int = 128):
     for i in range(h):
         for j in range(w):
             if error_img[i][j + 1] > threshold:
-                result[i][j] = 255
+                result[i][j] = value
             else:
                 result[i][j] = 0
             error_img[i:i + 2, j:j + 3] += \
