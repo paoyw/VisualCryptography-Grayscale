@@ -91,6 +91,9 @@ def enc(carry0, carry1, secret):
     """
     h, w = secret.shape
     # Dynamic range.
+    carry0 = 0.45 * carry0 + 0.275 * 255
+    carry1 = 0.45 * carry1 + 0.275 * 255
+    secret = 0.45 * secret
 
     # Error diffusion.
     error_s0 = np.zeros_like(carry0)
