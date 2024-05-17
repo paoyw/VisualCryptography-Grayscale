@@ -39,14 +39,15 @@ J = {
 }
 
 
-def compute_density(i, j, H0, H1, h, w):
+def compute_density(i, j, h0, h1, h, w):
     val_sum = 0
     w_sum = 0
     for (_i, _j), weight in W.items():
         _i += i
         _j += j
         if _i >= 0 and _i < h and _j >= 0 and _j < w:
-            val_sum += int(H0[_i][_j]) & int(H1[_i][_j])
+            if h0[_i][_j] > 0 and h1[_i][_j] > 0:
+                val_sum += weight
             w_sum += weight
     return val_sum / w_sum
 
@@ -91,16 +92,24 @@ def dynamic_range_control(img, threshold0=0.25, threshold1=0.75):
     return result
 
 
+def assign_value():
+    return random.choice([
+        np.array([[1, 0], [0, 1]]),
+        np.array([[0, 1], [1, 0]]),
+        np.array([[1, 1], [0, 0]]),
+        np.array([[0, 0], [1, 1]]),
+        np.array([[0, 1], [0, 1]]),
+        np.array([[1, 0], [1, 0]]),
+    ])
+
+
 def expand(h):
     _h, _w = h.shape
     H = np.zeros((2 * _h, 2 * _w))
     for i in range(_h):
         for j in range(_w):
             if h[i][j] > 0:
-                H[2 * i:2 * i + 2, 2 * j: 2 * j + 2] = random.choice([
-                    np.array([[1, 0], [0, 1]]),
-                    np.array([[0, 1], [1, 0]]),
-                ])
+                H[2 * i:2 * i + 2, 2 * j: 2 * j + 2] = assign_value()
     return H
 
 
@@ -120,42 +129,50 @@ def enc(carry0, carry1, secret, threshold=0.5, delta=0.05):
     carry0 = 0.45 * carry0 / 255 + 0.275
     carry1 = 0.45 * carry1 / 255 + 0.275
     secret = 0.45 * secret / 255
+    s_prime = dynamic_range_control(secret)
 
     h0 = errorDiffusionFloydSteinberg(carry0, threshold=0.5, value=1)
     H0 = expand(h0)
 
     h1 = np.zeros_like(h0)
     H1 = np.zeros_like(H0)
-    error1 = np.zeros_like(h0)
+    error1 = np.zeros_like(carry1)
 
     for i in range(h):
         for j in range(w):
             if carry1[i][j] + accum_error(i, j, error1, h, w) > threshold:
                 h1[i][j] = 1
+                t2 = assign_value()
             else:
                 h1[i][j] = 0
+                t2 = np.zeros((2, 2))
 
-            if np.abs(carry1[i][j] + accum_error(i, j, error1, h, w) - threshold) < delta:
+            if np.abs(carry1[i][j] - threshold) < delta:
                 d = compute_density(i, j, h0, h1, h, w)
-                if (secret[i][j] - d > compute_Tb(i, j, h, w)):
+                if (s_prime[i][j] - d > compute_Tb(i, j, h, w)):
+                    s_double_prime = 1
+                elif (d - s_prime[i][j] > compute_Tw(i, j, h, w)):
+                    s_double_prime = 0
+                else:
+                    s_double_prime = 0.5
+
+                if s_double_prime == 1:
                     H1[2 * i:2 * i + 2, 2 * j: 2 * j + 2] = \
                         H0[2 * i:2 * i + 2, 2 * j: 2 * j + 2]
-                elif (d - secret[i][j] > compute_Tw(i, j, h, w)):
+                    h1[i][j] = h0[i][j]
+                elif s_double_prime == 0.5:
+                    H1[2 * i:2 * i + 2, 2 * j: 2 * j + 2] = t2
+                else:
                     H1[2 * i:2 * i + 2, 2 * j: 2 * j + 2] = \
-                        H0[2 * i:2 * i + 2, 2 * j: 2 * j + 2].astype(np.uint8) ^ 1
-                elif carry1[i][j] + accum_error(i, j, error1, h, w) > threshold:
-                    H1[2 * i:2 * i + 2, 2 * j: 2 * j + 2] = random.choice([
-                        np.array([[1, 0], [0, 1]]),
-                        np.array([[0, 1], [1, 0]]),
-                    ])
-            elif carry1[i][j] + accum_error(i, j, error1, h, w) > threshold:
-                H1[2 * i:2 * i + 2, 2 * j: 2 * j + 2] = random.choice([
-                    np.array([[1, 0], [0, 1]]),
-                    np.array([[0, 1], [1, 0]]),
-                ])
+                        1 - H0[2 * i:2 * i + 2, 2 * j: 2 * j + 2]
+                    if h0[i][j] > 0:
+                        h1[i][j] = 1
+            else:
+                H1[2 * i:2 * i + 2, 2 * j: 2 * j + 2] = t2
 
-            error1[i][j] = carry1[i][j] - h1[i][j]
-    return 255 * H0.astype(np.uint8), 255 * H1.astype(np.uint8)
+            error1[i][j] = carry1[i][j] + \
+                accum_error(i, j, error1, h, w) - h1[i][j]
+    return (255 * H0).astype(np.uint8), (255 * H1).astype(np.uint8)
 
 
 def dec(share0, share1):
