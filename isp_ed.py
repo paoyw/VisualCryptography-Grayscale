@@ -118,8 +118,8 @@ def main(args):
         share1 = cv2.imread(args.share1, cv2.IMREAD_GRAYSCALE)
 
     if args.dec:
-        dec = dec(share0, share1)
-        cv2.imwrite(args.dec, dec)
+        dec_img = dec(share0, share1)
+        cv2.imwrite(args.dec, dec_img)
 
 
 if __name__ == '__main__':
