@@ -2,7 +2,7 @@
 
 We implement the paper [Reversible AMBTC-based secret sharing scheme with abilities of two decryptions](https://www.sciencedirect.com/science/article/pii/S1047320313002320). 
 
-## Image setting
+## Setting
 1.  **Secret Image:** Grayscale Image
 2.  **Carry Image:** Binary Image, which size of the carrier image should be a multiple of the block size of the secret image.
 3.  **Block Size:** 4 (If you want to use a different block size, you can modify the variable BLOCKSIZE in line 18)
