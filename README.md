@@ -36,7 +36,7 @@
     ```bash
     python3 HVC.py --shares ./path/to/codebook/directory --output ./path/to/output/directory --k 3 --m 6 --decompress 
     ```
-- **Decrypt:** Decrypt Carry Image.
+- **Decrypt:** Decrypt secret Image.
     ```bash
     python3 HVC.py --shares ./path/to/shares/directory --output ./path/to/output/directory --k 3 --m 6  --num_decrypt 5 --decrypt
     ```
