@@ -77,6 +77,17 @@ Please ensure the size of carry image and carry image. The size of the carry ima
 ├── ed.py
 ├── evc.py
 ├── isp_ed.py
+├── pattern_based
+│   ├── Chen
+│   │   ├── main_Chen.py
+│   │   └── ...
+│   ├── IGVSS
+│   │   ├── main_IGVSS.py
+│   │   └── ...
+│   ├── Naor
+│   │   ├── main_Naor.py
+│   │   └── ...
+│   └── README.md
 ├── README.md
 ├── report.pdf
 ├── requirements.txt
